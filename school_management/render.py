@@ -49,6 +49,9 @@ class CustomJsonRender(JSONRenderer):
             return super().render(data, accepted_media_type, renderer_context)
 
         response = renderer_context['response']
+        
+        print(response.data,'==================')
+        
         if response.status_code == status.HTTP_204_NO_CONTENT:
             updated_response = api_response(
                 message = "Deleted successfully."
@@ -67,3 +70,24 @@ class CustomJsonRender(JSONRenderer):
             return super().render(updated_response, accepted_media_type, renderer_context)
         return super().render(data, accepted_media_type, renderer_context)
         
+        
+        
+def custom_response(data, code, status, message):
+    if isinstance(data, list):
+        ready_data = []
+        for d in data:
+            ready_data.append(d)
+
+    else:
+        ready_data = data
+
+    response = {
+        "status": status,
+        "message": message,
+        "code": code,
+        "data": {
+            "response": ready_data
+        }
+    }
+
+    return response

@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
-
-
+from .utils import generate_employee_id, generate_otp
+from django.contrib.auth.models import Group
+from django.conf import settings
+from django.core.mail import send_mail
+from school_management.utils import ResponseMessage
 
 
 class UserManager(BaseUserManager):
@@ -60,6 +63,76 @@ class User(AbstractUser):
     
     
     def __str__(self) -> str:
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.email}"
+    
+    def add_to_group(self, group_name):
+        try:
+            group = Group.objects.get(name=group_name)
+        except Exception as e:
+            group = Group.objects.create(name=group_name)
+        self.groups.add(group)
+        
+    def send_forget_password_email(self):
+        try:
+            otp_obj = Otp.objects.create(user_id=self.id, otp=generate_otp(), type='ForgotPassword')
+            message = f"This is your forgot passord code {otp_obj.otp}"
+            send_mail(ResponseMessage.FORGET_PASSWORD_SUBJECT, message, settings.EMAIL_HOST_USER, [self.email])
+            return True
+        except Exception as e:
+            return False
+        
+    def send_reset_password_mail(self):
+        try:
+            otp_obj = Otp.objects.create(user_id=self.id, otp=generate_otp(), type='ResetPassword')
+            message = f"This is your reset passord code {otp_obj.otp}"
+            send_mail(ResponseMessage.RESET_PASSWORD_SUBJECT, message, settings.EMAIL_HOST_USER, [self.email])
+            return True
+        except Exception as e:
+            return False
+    
+    
+class AdminProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    employee_id = models.CharField(max_length=55)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self) -> str:
+        return f"{self.user.email}"
+    
+    def save(self, *args, **kwargs):
+        self.employee_id = generate_employee_id()
+        super(AdminProfile, self).save(*args, **kwargs)
+    
 
-
+class PrincipalProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    employee_id = models.CharField(max_length=55)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
+    appointed_date = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self) -> str:
+        return f"{self.user.email}"
+    
+    def save(self, *args, **kwargs):
+        self.employee_id = generate_employee_id()
+        super(PrincipalProfile, self).save(*args, **kwargs)
+    
+    
+class Otp(models.Model):
+    TYPE = (
+        ('CreateAccount','CreateAccount'),
+        ('ForgotPassword','ForgotPassword'),
+        ('ResetPassword','ResetPassword'),
+    )
+    
+    otp = models.CharField(max_length=55)
+    type = models.CharField(max_length=55, choices=TYPE, default='CreateAccount')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self) -> str:
+        return f"{self.user.email}-{self.type}"
+    
