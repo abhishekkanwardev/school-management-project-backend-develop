@@ -1,3 +1,4 @@
+from enum import Enum
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -6,6 +7,18 @@ from django.contrib.auth.models import Group
 from django.conf import settings
 from django.core.mail import send_mail
 from school_management.utils import ResponseMessage
+
+
+class RolesChoices(models.TextChoices):
+    ADMIN = 'admin'
+    PRINCIPAL = 'principal'
+    TEACHER = 'teacher'
+    GUARDIAN = 'guardian'
+    STUDENT = 'student'
+    GATEKEEPER = 'gatekeeper'
+    DRIVER = 'driver'
+    
+    
 
 
 class UserManager(BaseUserManager):
@@ -121,6 +134,22 @@ class PrincipalProfile(models.Model):
         self.employee_id = generate_employee_id()
         super(PrincipalProfile, self).save(*args, **kwargs)
     
+    
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    employee_id = models.CharField(max_length=55)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
+    qualification = models.CharField(max_length=255)
+    year_of_experience = models.CharField(max_length=55)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def save(self, *args, **kwargs):
+        self.employee_id = generate_employee_id()
+        super(TeacherProfile, self).save(*args, **kwargs)
+    
+    
+
     
 class Otp(models.Model):
     TYPE = (

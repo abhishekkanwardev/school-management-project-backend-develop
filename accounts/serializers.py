@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from school_management.utils import Response
 from rest_framework import status
 from django.contrib.auth.models import Group
-from .models import AdminProfile, PrincipalProfile
+from .models import AdminProfile, PrincipalProfile, RolesChoices, TeacherProfile
 from django.forms.models import model_to_dict
 
 User = get_user_model()
@@ -42,55 +42,81 @@ class PrincipalSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
         return super().create(validated_data)
+    
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeacherProfile
+        exclude = ("employee_id", "user")
+        
+    def to_representation(self, instance):
+        data = super(TeacherSerializer, self).to_representation(instance)
+        data.update({"employee_id": instance.employee_id})
+        return data
+        
+    def create(self, validated_data):
+        return super().create(validated_data)
 
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
-    user_type = serializers.CharField()
+    
+    user_type = serializers.ChoiceField(choices=RolesChoices.choices)
     role = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ['id', 'email', 'phone_number', 'gender', 'address', 'country', 'user_type', 'password', 'role']
         extra_kwargs = {
             'user_type': {'write_only': True},
-            'gender':{'required':False}
+            'gender':{'required':False},
+            'password':{'write_only': True}
         }
         
     def validate(self, data):
         """
         Check version already existo or not for this corporate
         """
+        request_data = self.context.get('request')
+        
         if data['user_type'] == 'admin':
-            seializer = AdminSerializer(data=data)
+            serializer = AdminSerializer(data=data)
         elif data['user_type'] == 'principal':
-            seializer = PrincipalSerializer(data=data)
+            serializer = PrincipalSerializer(data=data)
+        elif data['user_type'] == 'teacher':
+            serializer = TeacherSerializer(data=request_data)
             
-        if seializer.is_valid():
+        if serializer.is_valid():
             return data
         else:
-            raise serializers.ValidationError(seializer.errors)
+            raise serializers.ValidationError(serializer.errors)
+
         
     def get_role(self, instance):
         return instance.groups.values_list('name', flat=True)
     
     def create(self, validated_data):
-        request_data = self.context.get('request').data
+        request_data = self.context.get('request')
+
+        is_active = False
         if validated_data['user_type'] == 'admin':
-            seializer = AdminSerializer(data=request_data)
+            serializer = AdminSerializer(data=request_data)
+            is_active = True
         elif validated_data['user_type'] == 'principal':
-            seializer = PrincipalSerializer(data=request_data)
+            serializer = PrincipalSerializer(data=request_data)
+        elif validated_data['user_type'] == 'teacher':
+            serializer = TeacherSerializer(data=request_data)
             
-        if seializer.is_valid():
-            obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'])
-            seializer.save(user=obj)
+        if serializer.is_valid():
+            obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'], is_active=is_active)
+            serializer.save(user=obj)
             obj.add_to_group(validated_data['user_type'])
 
-            d = {**model_to_dict(obj, fields=[field.name for field in obj._meta.fields]), **seializer.data}
+            d = {**model_to_dict(obj, fields=[field.name for field in obj._meta.fields]), **serializer.data}
             d['role'] = self.get_role(obj)
             
             return d
         else:
-            raise serializers.ValidationError(seializer.errors)
+            raise serializers.ValidationError(serializer.errors)
         
 
 class UserSerializer(serializers.ModelSerializer):
@@ -137,3 +163,35 @@ class SavePasswordSerializer(serializers.Serializer):
 class SaveResetPasswordSerializer(serializers.Serializer):
     otp = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
+    
+    
+class AdminRegistrationSerializer(serializers.ModelSerializer):
+    profile = AdminSerializer()
+    user_type = serializers.CharField(required=True)
+    role = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'phone_number', 'gender', 'address', 'country', 'user_type', 'password', 'role', 'profile']
+        extra_kwargs = {
+            'user_type': {'write_only': True},
+            'gender':{'required':False},
+            'profile':{'required':False,}
+        }
+        
+    def get_role(self, instance):
+        return instance.groups.values_list('name', flat=True)
+        
+    def create(self, validated_data):
+        request_data = self.context.get('request').data
+        
+        user_type = validated_data['user_type']
+        del validated_data['user_type']
+        print(validated_data,'9999999999999999')
+        obj = obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'])
+        if user_type == 'admin':
+            obj.add_to_group(user_type)
+            
+        return obj
+        
+        

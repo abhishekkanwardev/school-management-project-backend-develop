@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     'accounts',
-    'debug_toolbar'
+    'debug_toolbar',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

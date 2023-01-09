@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
 )
 from django.urls import path
 
-from .views import CustomTokenObtainPairView, LogoutView, LogoutAllView, UserRegistration, ForgatePasswordView, SavePasswordView, ResetPassword, SaveResetPassword
+from .views import CustomTokenObtainPairView, LogoutView, LogoutAllView, UserRegistration, ForgatePasswordView, SavePasswordView, ResetPassword, SaveResetPassword, AdminRegisterView
 
 urlpatterns = [
     path('token', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -15,5 +15,6 @@ urlpatterns = [
     path('forgot-password', ForgatePasswordView.as_view()),
     path('save-password', SavePasswordView.as_view()),
     path('reset-password', ResetPassword.as_view()),
-    path('save-reset-password', SaveResetPassword.as_view())
+    path('save-reset-password', SaveResetPassword.as_view()),
+    path('admin-register', AdminRegisterView.as_view())
 ]
