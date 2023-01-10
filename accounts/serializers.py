@@ -187,7 +187,6 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
         
         user_type = validated_data['user_type']
         del validated_data['user_type']
-        print(validated_data,'9999999999999999')
         obj = obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'])
         if user_type == 'admin':
             obj.add_to_group(user_type)
