@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from django.conf import settings
 from django.core.mail import send_mail
 from school_management.utils import ResponseMessage
-
+from school_process.models import Class
 
 class RolesChoices(models.TextChoices):
     ADMIN = 'admin'
@@ -147,7 +147,24 @@ class TeacherProfile(models.Model):
     def save(self, *args, **kwargs):
         self.employee_id = generate_employee_id()
         super(TeacherProfile, self).save(*args, **kwargs)
+        
+
+class GuardianProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
+    relation = models.CharField(max_length=55, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
+    
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
+    bio = models.CharField(max_length=255)
+    class_id = models.ForeignKey(Class, on_delete=models.CASCADE, null=True, blank=True)
+    guardian = models.OneToOneField(GuardianProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 
     

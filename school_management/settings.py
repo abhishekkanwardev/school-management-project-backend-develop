@@ -53,8 +53,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 
+    'channels',
+    
     'accounts',
     'admission_process',
+    'school_process',
+    'chats',
     'debug_toolbar',
     'drf_yasg',
     
@@ -91,7 +95,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'school_management.wsgi.application'
-
+ASGI_APPLICATION = 'school_management.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -161,6 +165,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -177,28 +182,44 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 
-DEFAULTS = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': settings.SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
 
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
 
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
 
-    'JTI_CLAIM': 'jti',
+# ASGI_APPLICATION = 'school_management.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+SIMPLE_JWT = {
+'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+'ROTATE_REFRESH_TOKENS': False,
+'BLACKLIST_AFTER_ROTATION': True,
+
+'ALGORITHM': 'HS256',
+'SIGNING_KEY': settings.SECRET_KEY,
+'VERIFYING_KEY': None,
+'AUDIENCE': None,
+'ISSUER': None,
+
+'AUTH_HEADER_TYPES': ('Bearer',),
+'USER_ID_FIELD': 'id',
+'USER_ID_CLAIM': 'user_id',
+
+'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+'TOKEN_TYPE_CLAIM': 'token_type',
+
+'JTI_CLAIM': 'jti',
+'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
+'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
 }

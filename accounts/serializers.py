@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from school_management.utils import Response
 from rest_framework import status
 from django.contrib.auth.models import Group
-from .models import AdminProfile, PrincipalProfile, RolesChoices, TeacherProfile
+from .models import AdminProfile, PrincipalProfile, RolesChoices, TeacherProfile, GuardianProfile, StudentProfile
 from django.forms.models import model_to_dict
 
 User = get_user_model()
@@ -59,6 +59,23 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 
 
+class GuardianSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuardianProfile
+        exclude = ("user",)
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+    
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentProfile
+        exclude = ("user",)
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     
     user_type = serializers.ChoiceField(choices=RolesChoices.choices)
@@ -84,6 +101,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             serializer = PrincipalSerializer(data=data)
         elif data['user_type'] == 'teacher':
             serializer = TeacherSerializer(data=request_data)
+        elif data['user_type'] == 'guardian':
+            serializer = GuardianSerializer(data=request_data)
+        elif data['user_type'] == 'student':
+            serializer = StudentSerializer(data=request_data)
             
         if serializer.is_valid():
             return data
@@ -105,6 +126,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             serializer = PrincipalSerializer(data=request_data)
         elif validated_data['user_type'] == 'teacher':
             serializer = TeacherSerializer(data=request_data)
+        elif validated_data['user_type'] == 'guardian':
+            serializer = GuardianSerializer(data=request_data)
+        elif validated_data['user_type'] == 'student':
+            serializer = StudentSerializer(data=request_data)
             
         if serializer.is_valid():
             obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'], is_active=is_active)

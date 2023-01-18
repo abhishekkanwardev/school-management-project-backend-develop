@@ -17,7 +17,7 @@ def Response(data, code, status, message):
         "data": ready_data
     }
 
-    return DefaultResponse(response)
+    return DefaultResponse(response, status=code)
 
 
 
