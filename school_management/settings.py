@@ -53,13 +53,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 
-    'channels',
     
     'accounts',
     'admission_process',
     'school_process',
     'chats',
-    'debug_toolbar',
+    'attendance',
+     'debug_toolbar',
     'drf_yasg',
     
 ]
@@ -100,17 +100,25 @@ ASGI_APPLICATION = 'school_management.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': env('DATABASE_NAME'),
+#        'USER': env('DATABASE_USER'),
+#        'PASSWORD': env('DATABASE_PASSWORD'),
+#        'HOST': 'localhost',
+#        'PORT': 5432,
+#     }
+# }
+
 DATABASES = {
+
+    # Sqlite database is not active
     'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': env('DATABASE_NAME'),
-       'USER': env('DATABASE_USER'),
-       'PASSWORD': env('DATABASE_PASSWORD'),
-       'HOST': 'localhost',
-       'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -178,13 +186,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-
-
-
-
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # ASGI_APPLICATION = 'school_management.routing.application'
 CHANNEL_LAYERS = {
@@ -201,25 +204,25 @@ SIMPLE_JWT = {
 'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
 'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
 'ROTATE_REFRESH_TOKENS': False,
-'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 
-'ALGORITHM': 'HS256',
-'SIGNING_KEY': settings.SECRET_KEY,
-'VERIFYING_KEY': None,
-'AUDIENCE': None,
-'ISSUER': None,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': settings.SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
 
-'AUTH_HEADER_TYPES': ('Bearer',),
-'USER_ID_FIELD': 'id',
-'USER_ID_CLAIM': 'user_id',
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
 
-'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-'TOKEN_TYPE_CLAIM': 'token_type',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
 
-'JTI_CLAIM': 'jti',
-'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    'JTI_CLAIM': 'jti',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
-'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
-'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
 }
