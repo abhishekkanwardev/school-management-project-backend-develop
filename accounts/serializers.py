@@ -11,6 +11,7 @@ from rest_framework import status
 from django.contrib.auth.models import Group
 from .models import AdminProfile, PrincipalProfile, RolesChoices, TeacherProfile, GuardianProfile, StudentProfile
 from django.forms.models import model_to_dict
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -84,9 +85,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'email', 'phone_number', 'gender', 'address', 'country', 'user_type', 'password', 'role']
         extra_kwargs = {
+            'password':{'write_only': True},
             'user_type': {'write_only': True},
             'gender':{'required':False},
-            'password':{'write_only': True}
         }
         
     def validate(self, data):
@@ -135,9 +136,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'], is_active=is_active)
             serializer.save(user=obj)
             obj.add_to_group(validated_data['user_type'])
+            refresh = RefreshToken.for_user(obj)
 
-            d = {**model_to_dict(obj, fields=[field.name for field in obj._meta.fields]), **serializer.data}
+            d = {**model_to_dict(obj, fields=[field.name for field in obj._meta.fields if field.name not in ['password', 'is_staff', 'is_superuser']]), **serializer.data}
             d['role'] = self.get_role(obj)
+            d['token'] = {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
             
             return d
         else:
