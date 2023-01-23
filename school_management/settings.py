@@ -54,11 +54,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     'channels',
-    
+
     'accounts',
     'admission_process',
     'school_process',
     'chats',
+    'attendance',
     'debug_toolbar',
     'drf_yasg',
     
@@ -110,7 +111,6 @@ DATABASES = {
        'PORT': 5432,
     }
 }
-
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -180,11 +180,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-
-
-
-
 
 # ASGI_APPLICATION = 'school_management.routing.application'
 CHANNEL_LAYERS = {

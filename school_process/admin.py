@@ -3,3 +3,4 @@ from .models import Class, Dismissal
 
 admin.site.register(Class)
 admin.site.register(Dismissal)
+

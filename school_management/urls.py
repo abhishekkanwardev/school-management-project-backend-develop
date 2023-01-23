@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/v1/chat/', include('chats.urls')),
     path('api/v1/admission-application/', include("admission_process.urls")),
     path('api/v1/schoold-process/', include("school_process.urls")),
+    path('api/v1/attendance/', include("attendance.urls")),
     path('__debug__/', include('debug_toolbar.urls')),
     
     
