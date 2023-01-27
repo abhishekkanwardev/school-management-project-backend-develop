@@ -22,6 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Snippets API",
@@ -44,7 +45,10 @@ urlpatterns = [
     path('api/v1/chat/', include('chats.urls')),
     path('api/v1/admission-application/', include("admission_process.urls")),
     path('api/v1/attendance/', include("attendance.urls")),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/progress-tracking/', include("progress_tracking.urls")),
     path('__debug__/', include('debug_toolbar.urls')),
+    
     
     
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

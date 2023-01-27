@@ -17,7 +17,7 @@ class Attendance(models.Model):
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name = 'attendances')
     date = models.DateField()
     status = models.CharField(max_length=25, choices=STATUS, default='Present')
-    lesson = models.PositiveIntegerField(
+    lesson_period = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(7)],
     )
 

@@ -1,17 +1,18 @@
 from rest_framework import status
 from rest_framework.response import Response
-
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
+from school_management.permission  import IsAuthenticatedOrTeacherAdmin
 from .models import Attendance
 from .serializers import AttendanceSerializer
 
-
 class AttendanceListCreateAPIView(APIView):
     
+    permission_classes = [IsAuthenticatedOrTeacherAdmin]
+
     def get(self, request, student_id=None, year=None, month=None, day=None):
-        attendance_list = Attendance.objects.order_by('lesson')
+        attendance_list = Attendance.objects.order_by('lesson_period')
         if student_id:
             attendance_list = attendance_list.filter(student__id = student_id)
             if year and month and day:
@@ -29,6 +30,8 @@ class AttendanceListCreateAPIView(APIView):
 
 
 class AttendanceDetailAPIView(APIView):
+
+    permission_classes = [IsAuthenticatedOrTeacherAdmin]
     
     def get_object(self,pk):
         attendance_intance = get_object_or_404(Attendance, pk=pk)
