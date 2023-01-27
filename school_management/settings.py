@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'school_process',
     'chats',
     'attendance',
+    'progress_tracking',
     'debug_toolbar',
     'drf_yasg',
     
