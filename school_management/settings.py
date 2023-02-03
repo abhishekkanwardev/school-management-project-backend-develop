@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-
     'channels',
 
     'accounts',
@@ -61,6 +60,8 @@ INSTALLED_APPS = [
     'chats',
     'attendance',
     'progress_tracking',
+    'incident_accident_report',
+    
     'debug_toolbar',
     'drf_yasg',
     
