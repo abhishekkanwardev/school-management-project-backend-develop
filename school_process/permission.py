@@ -13,7 +13,6 @@ class IsClassTeacherUser(BasePermission):
         if request.method == 'PUT' or request.method == 'PATCH':
             try:
                 dismissal_obj = Dismissal.objects.get(pk=pk)
-                print(dismissal_obj.student.class_id.class_teacher.id,'ddddddddddddddddddddddddddddddd')
                 if dismissal_obj.student.class_id.class_teacher.user.id == request.user.id:
                     return bool('teacher' in user and request.user.is_authenticated)
                 else:
@@ -22,9 +21,6 @@ class IsClassTeacherUser(BasePermission):
                 return bool('teacher' in user and request.user.is_authenticated)
         else:
             return bool('teacher' in user and request.user.is_authenticated)
-
-        
-
 
 class IsTeacherUser(BasePermission):
     """

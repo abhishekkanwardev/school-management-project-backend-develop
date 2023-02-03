@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/v1/schoold-process/', include("school_process.urls")),
     path('api/v1/attendance/', include("attendance.urls")),
     path('api/v1/progress-tracking/', include("progress_tracking.urls")),
+    path('api/v1/incident-accident/', include("incident_accident_report.urls")),
 
     path('__debug__/', include('debug_toolbar.urls')),
     
