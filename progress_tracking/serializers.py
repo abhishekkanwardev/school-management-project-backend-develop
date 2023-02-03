@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProggressRecord, ProgressScore, LessonProgress, StudentProgress
+from .models import ProggressRecord, ProgressScore, LessonProgress, StudentProgress, ClassProgress
 
 from school_process.serializers import LessonSerializer
     
@@ -37,5 +37,14 @@ class ProggressRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProggressRecord
+        fields = '__all__'
+        read_only_fields = ['id']
+
+class ClassProgressSerializer(serializers.ModelSerializer):
+    
+    progress_record_list = ProggressRecordSerializer(many=True, read_only=True) 
+
+    class Meta:
+        model = ClassProgress
         fields = '__all__'
         read_only_fields = ['id']
