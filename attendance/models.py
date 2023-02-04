@@ -25,4 +25,3 @@ class Attendance(models.Model):
     lesson_period = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(7)],
     )
-

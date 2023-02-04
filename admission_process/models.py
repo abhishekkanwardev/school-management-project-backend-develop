@@ -9,6 +9,10 @@ class AdmissionApplication(models.Model):
         ('Female', 'Female'),
         ('Other', 'Other'),
     )
+    STATUS = (
+        ('Received', 'Received'),
+        ('Appointment', 'Appointment'),
+    )
     student_first_name = models.CharField(max_length=55)
     student_last_name = models.CharField(max_length=55)
     health_insurance = models.CharField(max_length=55)
@@ -30,6 +34,7 @@ class AdmissionApplication(models.Model):
     starting_date = models.DateField()
     departure_date = models.DateField()
     notes = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=25, choices=STATUS, default='Received')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -64,7 +64,8 @@ INSTALLED_APPS = [
     
     'debug_toolbar',
     'drf_yasg',
-    
+    'corsheaders'
+
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'school_management.urls'
@@ -194,6 +197,11 @@ CHANNEL_LAYERS = {
 }
 
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
+]
+
+
 SIMPLE_JWT = {
 'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
 'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
@@ -219,4 +227,4 @@ SIMPLE_JWT = {
 'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
 'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
 'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
-}
+} 
