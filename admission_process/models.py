@@ -34,7 +34,7 @@ class AdmissionApplication(models.Model):
     starting_date = models.DateField()
     departure_date = models.DateField()
     notes = models.CharField(max_length=255, null=True, blank=True)
-    status = models.CharField(max_length=25, choices=STATUS, default='Present')
+    status = models.CharField(max_length=25, choices=STATUS, default='Received')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
