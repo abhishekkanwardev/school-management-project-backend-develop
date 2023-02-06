@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework.serializers import ModelSerializer
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from .models import Class, AdmissionApplication
-from .serializers import ClassSerializer, AdmissionApplicationSerializer
+from .serializers import ClassSerializer, AdmissionApplicationSerializer, AppointmentSerializers
 from rest_framework.permissions import AllowAny
 from .permission import IsAdminUser
-
+from .models import Appointment
 
 class ClassViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
@@ -24,3 +24,12 @@ class AdmissionViewSet(ModelViewSet):
         else:
             self.permission_classes = [IsAdminUser, ]
         return super(AdmissionViewSet, self).get_permissions()
+
+
+class AppointmentViewSet(ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializers
+    
+    def get_serializer_context(self):
+        return {"request": self.request}

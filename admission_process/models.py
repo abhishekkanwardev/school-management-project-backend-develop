@@ -40,4 +40,32 @@ class AdmissionApplication(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     
+class Appointment(models.Model):
     
+    class Meta:
+        unique_together = ('appointment_date', 'appointment_time')
+    
+    TIMESLOT_LIST = (
+        (0, '09:00 AM'),
+        (1, '10:00 AM'),
+        (2, '11:00 AM'),
+        (3, '12:00 PM'),
+        (4, '01:00 PM'),
+        (5, '02:00 PM'),
+        (6, '03:00 PM'),
+        (7, '04:00 PM'),
+        (8, '05:00 PM'),
+    )
+    
+    STATUS = (
+        ('Wating', 'Wating'),
+        ('Accept', 'Accept The Appoinment'),
+        ('Reject', 'Reject'),
+    )
+    
+    admission_application = models.OneToOneField(AdmissionApplication, on_delete=models.DO_NOTHING)
+    appointment_date = models.DateField(help_text="YYYY-MM-DD")
+    appointment_time = models.IntegerField(choices=TIMESLOT_LIST)
+    status = models.CharField(choices=STATUS, max_length=55, default='Wating')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
