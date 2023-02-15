@@ -4,59 +4,21 @@ from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
 from school_management.permission  import IsAuthenticatedOrTeacherAdmin
-from .models import Attendance, ClassAttendance
-from .serializers import AttendanceSerializer, ClassAttendanceSerializer
+from .models import Attendance
+from .serializers import AttendanceSerializer
+
+from rest_framework.pagination import LimitOffsetPagination
 
 
-
-class ClassAttendanceListCreateAPIView(APIView):
+class ClassAttendanceListCreateAPIView(APIView, LimitOffsetPagination):
     permission_classes = [IsAuthenticatedOrTeacherAdmin]
 
     def get(self, request, classId=None):
-        class_attendance_list = ClassAttendance.objects.order_by('pk')
-        if classId:
-            class_attendance_list = class_attendance_list.filter(pk = classId)
-        serializer = ClassAttendanceSerializer(class_attendance_list, many = True) 
-        return Response(serializer.data)
+        class_attendance_list = Attendance.objects.filter(student__class_id=classId).order_by('pk')
+        results = self.paginate_queryset(class_attendance_list, request, view=self)
+        serializer = AttendanceSerializer(results, many = True) 
+        return self.get_paginated_response(serializer.data)
         
-    def post(self, request):
-        serializer = ClassAttendanceSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status = status.HTTP_201_CREATED)  
-
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-
-
-class ClassAttendanceDetailAPIView(APIView):
-    
-    permission_classes = [IsAuthenticatedOrTeacherAdmin]
-
-    def get_object(self,pk):
-        class_attendance_instance = get_object_or_404(ClassAttendance, pk=pk)
-        return class_attendance_instance
-        
-    def get(self, request, pk):
-        class_attendance = self.get_object(pk = pk)
-        serializer = ClassAttendanceSerializer(class_attendance)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        class_attendance = self.get_object(pk = pk)
-        serializer = ClassAttendanceSerializer(class_attendance, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)  
-            
-        return Response(serializer.errors,status = status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pk):
-        class_attendance = self.get_object(pk = pk)
-        class_attendance.delete()
-        return Response(status = status.HTTP_204_NO_CONTENT)
-    
-
-
 
 class AttendanceListCreateAPIView(APIView):
     

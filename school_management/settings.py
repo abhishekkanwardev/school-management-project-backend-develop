@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'attendance',
     'progress_tracking',
     'incident_accident_report',
+    'grading_and_reports',
     
     'debug_toolbar',
     'drf_yasg',
@@ -174,7 +175,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 7 
     # "DEFAULT_RENDERER_CLASSES": ("school_management.render.CustomJsonRender",)
 }
 

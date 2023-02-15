@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProggressRecord, ProgressScore, LessonProgress, StudentProgress, ClassProgress
+from .models import ProggressRecord, ProgressScore, LessonProgress, StudentProgress
 
 from school_process.serializers import LessonSerializer
     
@@ -7,8 +7,16 @@ class ProgressScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProgressScore
-        fields = '__all__'
+        exclude = ['id']
         read_only_fields = ['id']
+    
+    def validate(self, data):
+        progress_type = data['progress_type']
+        score = data['score']
+        anySameData = ProgressScore.objects.filter(progress_type = progress_type, score = score).exists()
+        if anySameData:
+            raise serializers.ValidationError(f'Progress Score already exist with {progress_type} - {score} values.')
+        return data 
 
 
 class LessonProgressSerializer(serializers.ModelSerializer):
@@ -40,11 +48,3 @@ class ProggressRecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id']
 
-class ClassProgressSerializer(serializers.ModelSerializer):
-    
-    progress_record_list = ProggressRecordSerializer(many=True, read_only=True) 
-
-    class Meta:
-        model = ClassProgress
-        fields = '__all__'
-        read_only_fields = ['id']
