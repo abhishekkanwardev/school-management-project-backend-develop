@@ -166,7 +166,7 @@ class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
     bio = models.CharField(max_length=255)
-    class_id = models.ForeignKey('school_process.Class', on_delete=models.CASCADE, null=True, blank=True)
+    class_id = models.ForeignKey('school_process.Class', on_delete=models.CASCADE, null=True, blank=True, related_name = 'students')
     guardian = models.OneToOneField(GuardianProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
