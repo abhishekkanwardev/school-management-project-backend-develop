@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     'attendance',
     'progress_tracking',
     'incident_accident_report',
+    'news_feed',
+    'ticket_support',
     'grading_and_reports',
     
     'debug_toolbar',

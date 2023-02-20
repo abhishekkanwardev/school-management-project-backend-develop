@@ -36,4 +36,14 @@ class IsStudentGuardianUser(permissions.BasePermission):
             return False
         user = request.user.groups.all().values_list('name', flat=True)
         return bool('guardian' in user or '	student' in user)
+
+
+class IsStudentUser(permissions.BasePermission):
+    
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        user = request.user.groups.all().values_list('name', flat=True)
+        return bool('student' in user)
+    
     
