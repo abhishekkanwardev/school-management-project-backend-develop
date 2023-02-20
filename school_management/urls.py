@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/v1/schoold-process/', include("school_process.urls")),
     path('api/v1/attendance/', include("attendance.urls")),
     path('api/v1/progress-tracking/', include("progress_tracking.urls")),
+    path('api/v1/grading-and-reports/', include("grading_and_reports.urls")),
     path('api/v1/incident-accident/', include("incident_accident_report.urls")),
     path('api/v1/feed/', include("news_feed.urls")),
 

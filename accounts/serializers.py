@@ -125,12 +125,16 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             is_active = True
         elif validated_data['user_type'] == 'principal':
             serializer = PrincipalSerializer(data=request_data)
+            is_active = True #temporary true
         elif validated_data['user_type'] == 'teacher':
             serializer = TeacherSerializer(data=request_data)
+            is_active = True #temporary true
         elif validated_data['user_type'] == 'guardian':
             serializer = GuardianSerializer(data=request_data)
+            is_active = True #temporary true
         elif validated_data['user_type'] == 'student':
             serializer = StudentSerializer(data=request_data)
+            is_active = True #temporary true
             
         if serializer.is_valid():
             obj = User.objects.create_user(email=validated_data['email'], phone_number=validated_data['phone_number'], address=validated_data['address'], country=validated_data.get('country'), password=validated_data['password'], is_active=is_active)
