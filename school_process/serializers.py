@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from accounts.models import StudentProfile
-from .models import Class, Dismissal, Lesson, ClassDismissal
+from .models import Class, Dismissal, Lesson
 
 
 
@@ -29,13 +29,6 @@ class DismissalSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ['id']
 
-
-class ClassDismissalSerializer(serializers.ModelSerializer):
-    dismissal_list = DismissalSerializer(many=True, read_only=True) 
-    class Meta:
-        model = ClassDismissal
-        fields = '__all__'
-        read_only_fields = ['id']
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:

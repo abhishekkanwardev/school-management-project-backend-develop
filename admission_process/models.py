@@ -67,5 +67,6 @@ class Appointment(models.Model):
     appointment_date = models.DateField(help_text="YYYY-MM-DD")
     appointment_time = models.IntegerField(choices=TIMESLOT_LIST)
     status = models.CharField(choices=STATUS, max_length=55, default='Wating')
+    reject_message = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
