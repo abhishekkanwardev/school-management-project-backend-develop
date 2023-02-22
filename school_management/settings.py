@@ -115,7 +115,7 @@ DATABASES = {
        'NAME': env('DATABASE_NAME'),
        'USER': env('DATABASE_USER'),
        'PASSWORD': env('DATABASE_PASSWORD'),
-       'HOST': 'localhost',
+       'HOST': '192.168.2.123',
        'PORT': 5432,
     }
 }
@@ -204,7 +204,7 @@ CHANNEL_LAYERS = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3030',
+    'http://localhost:3000',
 ]
 
 

@@ -28,7 +28,7 @@ class AdmissionViewSet(ModelViewSet):
         if self.request.method == 'POST':
             self.permission_classes = [AllowAny, ]
         else:
-            self.permission_classes = [IsAdminUser, ]
+            self.permission_classes = [AllowAny, ]
         return super(AdmissionViewSet, self).get_permissions()
 
 
