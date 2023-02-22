@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from school_management.permission import IsAdminTeacherUser, IsStudentGuardianUser
 from school_management.utils import CustomPagination
+from rest_framework.pagination import LimitOffsetPagination
 
 
 
@@ -12,7 +13,7 @@ class IncidentAccidentViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = IncidentAccidentReport.objects.all()
     serializer_class = IncidentAccidentReportSErializer
-    pagination_class = CustomPagination
+    pagination_class = LimitOffsetPagination
     
     
     def get_permissions(self):

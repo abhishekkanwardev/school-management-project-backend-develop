@@ -42,3 +42,8 @@ class AppointmentSerializers(serializers.ModelSerializer):
             fields["status"].read_only = True
         return fields
     
+class AppointmentUpdateStatusByIdSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = "__all__"
+        read_only_fields = ['id']

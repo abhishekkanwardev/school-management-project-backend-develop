@@ -14,11 +14,6 @@ class Class(models.Model):
         return self.class_name
 
 
-
-class ClassDismissal(models.Model):
-    _class = models.ForeignKey(Class, on_delete=models.CASCADE, related_name = 'class_dismissal_list')
-
-
 class Dismissal(models.Model):
     DISMISSAL_TYPE = (
         ('Regular', 'Regular'),
@@ -29,7 +24,6 @@ class Dismissal(models.Model):
         ('Approved', 'Approved'),
         ('Reject', 'Reject'),
     )
-    class_dismissal= models.ForeignKey(ClassDismissal, on_delete=models.CASCADE, null=True, related_name='dismissal_list')
     student = models.ForeignKey(StudentProfile, on_delete=models.DO_NOTHING)
     dismissal_type = models.CharField(choices=DISMISSAL_TYPE, default='Regular', max_length=10)
     notes = models.TextField()
