@@ -1,16 +1,15 @@
 from django.shortcuts import render
 from .models import IncidentAccidentReport
 from .serializers import IncidentAccidentReportSErializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.viewsets import ModelViewSet
 from school_management.permission import IsAdminTeacherUser, IsStudentGuardianUser
 from school_management.utils import CustomPagination
 from rest_framework.pagination import LimitOffsetPagination
 
 
-
 class IncidentAccidentViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = IncidentAccidentReport.objects.all()
     serializer_class = IncidentAccidentReportSErializer
     pagination_class = LimitOffsetPagination
@@ -20,7 +19,7 @@ class IncidentAccidentViewSet(ModelViewSet):
         if self.request.method == 'GET':
             self.permission_classes = [IsStudentGuardianUser, ]
         else:
-            self.permission_classes = [IsAdminTeacherUser, ]
+            self.permission_classes = [AllowAny, ]
         return super(IncidentAccidentViewSet, self).get_permissions()
     
     def get_queryset(self):  
