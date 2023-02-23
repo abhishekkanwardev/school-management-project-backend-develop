@@ -12,6 +12,9 @@ class AdmissionApplication(models.Model):
     STATUS = (
         ('Received', 'Received'),
         ('Appointment', 'Appointment'),
+        ('Appointment Received', 'Appointment Received'),
+        ('Academic Received', 'Academic Received'),
+        ('Success', 'Success'),
     )
     student_first_name = models.CharField(max_length=55)
     student_last_name = models.CharField(max_length=55)
