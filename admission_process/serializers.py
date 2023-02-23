@@ -19,9 +19,9 @@ class AdmissionApplicationSerializer(serializers.ModelSerializer):
         model = AdmissionApplication
         exclude = ('is_active',)
         
-
+ 
 class AppointmentSerializers(serializers.ModelSerializer):
-    appointment_time = serializers.ChoiceField(source='get_appointment_time_display', choices=Appointment.TIMESLOT_LIST)
+    # appointment_time = serializers.ChoiceField(source='get_appointment_time_display', choices=Appointment.TIMESLOT_LIST)
     class Meta:
         model = Appointment
         fields = "__all__"
