@@ -15,10 +15,17 @@ class AdmissionApplicationSerializer(serializers.ModelSerializer):
     """
     Class that converts models to JSON
     """
+    appointment_id = serializers.SerializerMethodField()
+
     class Meta:
         model = AdmissionApplication
         exclude = ('is_active',)
-        
+
+    def get_appointment_id(self, object):
+        associatedAppointment = Appointment.objects.filter(admission_application__id = object.id)
+        if associatedAppointment:
+            return associatedAppointment.first().id
+        return -1 
  
 class AppointmentSerializers(serializers.ModelSerializer):
     # appointment_time = serializers.ChoiceField(source='get_appointment_time_display', choices=Appointment.TIMESLOT_LIST)
