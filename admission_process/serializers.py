@@ -1,6 +1,7 @@
 from .models import Class, AdmissionApplication, Appointment
 from rest_framework import serializers
 from django.utils import timezone
+from django.forms.models import model_to_dict
 
 class ClassSerializer(serializers.ModelSerializer):
     """
@@ -9,24 +10,8 @@ class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
         fields = '__all__'
-        
-        
-class AdmissionApplicationSerializer(serializers.ModelSerializer):
-    """
-    Class that converts models to JSON
-    """
-    appointment_id = serializers.SerializerMethodField()
 
-    class Meta:
-        model = AdmissionApplication
-        exclude = ('is_active',)
 
-    def get_appointment_id(self, object):
-        associatedAppointment = Appointment.objects.filter(admission_application__id = object.id)
-        if associatedAppointment:
-            return associatedAppointment.first().id
-        return -1 
- 
 class AppointmentSerializers(serializers.ModelSerializer):
     # appointment_time = serializers.ChoiceField(source='get_appointment_time_display', choices=Appointment.TIMESLOT_LIST)
     class Meta:
@@ -54,3 +39,36 @@ class AppointmentUpdateStatusByIdSerializers(serializers.ModelSerializer):
         model = Appointment
         fields = "__all__"
         read_only_fields = ['id']
+        
+
+class AdmissionApplicationSerializer(serializers.ModelSerializer):
+    appointment_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AdmissionApplication
+        exclude = ('is_active',)
+
+    def get_appointment_id(self, object):
+        associatedAppointment = Appointment.objects.filter(admission_application__id = object.id)
+        if associatedAppointment:
+            return associatedAppointment.first().id
+        return -1 
+
+
+class AdmissionApplicationNonAuthSerializer(serializers.ModelSerializer):
+    """
+    Class that converts models to JSON
+    """
+    appointment = serializers.SerializerMethodField() 
+
+    class Meta:
+        model = AdmissionApplication
+        exclude = ('is_active',)
+
+    def get_appointment(self, object):
+        associatedAppointment = Appointment.objects.filter(admission_application__id = object.id)
+        if associatedAppointment:
+            return model_to_dict(associatedAppointment.first())
+        return -1 
+ 
+
