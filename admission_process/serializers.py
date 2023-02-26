@@ -42,17 +42,17 @@ class AppointmentUpdateStatusByIdSerializers(serializers.ModelSerializer):
         
 
 class AdmissionApplicationSerializer(serializers.ModelSerializer):
-    appointment_id = serializers.SerializerMethodField()
+    appointment = serializers.SerializerMethodField()
 
     class Meta:
         model = AdmissionApplication
         exclude = ('is_active',)
 
-    def get_appointment_id(self, object):
+    def get_appointment(self, object):
         associatedAppointment = Appointment.objects.filter(admission_application__id = object.id)
         if associatedAppointment:
-            return associatedAppointment.first().id
-        return -1 
+            return model_to_dict(associatedAppointment.first())
+        return None 
 
 
 class AdmissionApplicationNonAuthSerializer(serializers.ModelSerializer):
@@ -69,6 +69,6 @@ class AdmissionApplicationNonAuthSerializer(serializers.ModelSerializer):
         associatedAppointment = Appointment.objects.filter(admission_application__id = object.id)
         if associatedAppointment:
             return model_to_dict(associatedAppointment.first())
-        return -1 
+        return None 
  
 
