@@ -110,3 +110,16 @@ class AppointmentUpdateStatusById(APIView):
             return Response(serializer.data)  
             
         return Response(serializer.errors,status = status.HTTP_400_BAD_REQUEST)
+    
+
+class AppointmentNonAuthPostAPIView(APIView):
+    permission_classes = [AllowAny]
+         
+    def post(self, request):
+        serializer = AppointmentSerializers(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)  
+        #status change 
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+

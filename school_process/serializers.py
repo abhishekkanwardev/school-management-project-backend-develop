@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from accounts.models import StudentProfile
+from accounts.serializers import StudentDetailForContainsStudentsSerializer
 from .models import Class, Dismissal, Lesson
 
 
@@ -24,6 +25,8 @@ class StudentSerializer(serializers.ModelSerializer):
     
     
 class DismissalSerializer(serializers.ModelSerializer):
+    student = StudentDetailForContainsStudentsSerializer(read_only=True) 
+    
     class Meta:
         model = Dismissal
         fields = "__all__"
