@@ -1,5 +1,3 @@
-
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -76,7 +74,29 @@ class StudentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return super().create(validated_data)
 
+    
+class StudentDetailForContainsStudentsSerializer(serializers.ModelSerializer):
 
+    first_name = serializers.SerializerMethodField() 
+    last_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = StudentProfile
+        fields = ("profile_image","first_name","last_name",)
+
+    def get_first_name(self, object):
+        student = StudentProfile.objects.filter(pk = object.id)
+        if student.exists():
+            return student.first().user.first_name
+        return None 
+    
+    def get_last_name(self, object):
+        student = StudentProfile.objects.filter(pk = object.id)
+        if student.exists():
+            return student.first().user.last_name
+        return None 
+    
+    
 class UserRegisterSerializer(serializers.ModelSerializer):
     
     user_type = serializers.ChoiceField(choices=RolesChoices.choices)

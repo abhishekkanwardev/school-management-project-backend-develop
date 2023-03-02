@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Attendance
-    
+
+from accounts.serializers import StudentDetailForContainsStudentsSerializer
 from datetime import date
     
 class AttendanceSerializer(serializers.ModelSerializer):
-    
+    student = StudentDetailForContainsStudentsSerializer(read_only=True) 
+
     class Meta:
         model = Attendance
         fields = '__all__'
