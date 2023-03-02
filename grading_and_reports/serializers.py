@@ -2,7 +2,8 @@ from rest_framework import serializers
 from .models import GradingType, GradingKey, StudentGrades, LessonGrade, Grading
 
 from school_process.serializers import LessonSerializer
-    
+from accounts.serializers import StudentDetailForContainsStudentsSerializer
+
 
 class GradingTypeSerializer(serializers.ModelSerializer):
     
@@ -74,6 +75,7 @@ class LessonGradeSerializer(serializers.ModelSerializer):
 
 class StudentGradesSerializer(serializers.ModelSerializer):
     lesson_grade_list = LessonGradeSerializer(many=True, read_only=True) 
+    student = StudentDetailForContainsStudentsSerializer(read_only=True) 
 
     class Meta:
         model = StudentGrades

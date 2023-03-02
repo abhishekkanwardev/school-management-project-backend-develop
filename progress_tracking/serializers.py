@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import ProggressRecord, ProgressScore, LessonProgress, StudentProgress
-
+from accounts.serializers import StudentDetailForContainsStudentsSerializer
 from school_process.serializers import LessonSerializer
     
 class ProgressScoreSerializer(serializers.ModelSerializer):
@@ -31,8 +31,8 @@ class LessonProgressSerializer(serializers.ModelSerializer):
 
 
 class StudentProgressSerializer(serializers.ModelSerializer):
-    
     lesson_progress_list = LessonProgressSerializer(many=True, read_only=True) 
+    student = StudentDetailForContainsStudentsSerializer(read_only=True) 
 
     class Meta:
         model = StudentProgress
